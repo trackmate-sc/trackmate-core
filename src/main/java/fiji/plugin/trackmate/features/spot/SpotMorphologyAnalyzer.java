@@ -12,20 +12,20 @@ import static fiji.plugin.trackmate.features.spot.SpotMorphologyAnalyzerFactory.
 import java.util.Arrays;
 import java.util.Iterator;
 
+import Jama.EigenvalueDecomposition;
+import Jama.Matrix;
+import fiji.plugin.trackmate.Spot;
+import fiji.plugin.trackmate.util.EllipseCursor;
+import fiji.plugin.trackmate.util.EllipseNeighborhood;
+import fiji.plugin.trackmate.util.SpotNeighborhood;
+import fiji.plugin.trackmate.util.SpotNeighborhoodCursor;
 import net.imagej.ImgPlus;
 import net.imagej.axis.DefaultLinearAxis;
-import net.imglib2.algorithm.region.localneighborhood.EllipseCursor;
-import net.imglib2.algorithm.region.localneighborhood.EllipseNeighborhood;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
-import Jama.EigenvalueDecomposition;
-import Jama.Matrix;
-import fiji.plugin.trackmate.Spot;
-import fiji.plugin.trackmate.util.SpotNeighborhood;
-import fiji.plugin.trackmate.util.SpotNeighborhoodCursor;
 
 /**
  * This {@link SpotAnalyzer} computes morphology features for the given spots.
@@ -72,7 +72,7 @@ import fiji.plugin.trackmate.util.SpotNeighborhoodCursor;
  * <li>otherwise it has the value {@link SpotMorphologyAnalyzerFactory#SCALENE};
  * the spot's shape has nothing particular
  * </ul>
- * 
+ *
  * @author Jean-Yves Tinevez &lt;jeanyves.tinevez@gmail.com&gt; Apr 1, 2011 -
  *         2012
  */
@@ -271,7 +271,7 @@ public class SpotMorphologyAnalyzer< T extends RealType< T >> extends Independen
 	/**
 	 * Estimates whether a Spot morphology from the semi-axes lengths of its
 	 * most resembling ellipsoid.
-	 * 
+	 *
 	 * @param semiaxes
 	 *            The semi-axis lengths <b>in ascending order</b>.
 	 * @return 1 [Ellipsoid] if any semi-axis length(s) are significantly larger
@@ -393,21 +393,21 @@ public class SpotMorphologyAnalyzer< T extends RealType< T >> extends Independen
 
 		// TEST 3D case
 		/*
-		 * 
+		 *
 		 * // Parameters int size_x = 200; int size_y = 200; int size_z = 200;
-		 * 
+		 *
 		 * double a = 5.5f; double b = 4.9f; double c = 5; double theta_r =
 		 * (double) Math.toRadians(0); // I am unable to have it working for
 		 * theta_r != 0 double phi_r = (double) Math.toRadians(45);
-		 * 
+		 *
 		 * double max_radius = Math.max(a, Math.max(b, c)); double[] calibration
 		 * = new double[] {1, 1, 1};
-		 * 
+		 *
 		 * // Create blank image Image<UnsignedByteType> img = new
 		 * ImageFactory<UnsignedByteType>( new UnsignedByteType(), new
 		 * ArrayContainerFactory() ).createImage(new int[] {200, 200, 200});
 		 * final byte on = (byte) 255;
-		 * 
+		 *
 		 * // Create an ellipse long start = System.currentTimeMillis();
 		 * System.out.println(String.format(
 		 * "Creating an ellipse with a = %.1f, b = %.1f, c = %.1f", a, b, c));
@@ -424,13 +424,13 @@ public class SpotMorphologyAnalyzer< T extends RealType< T >> extends Independen
 		 * r2*cosphi*cosphi*sintheta*sintheta/a/a +
 		 * r2*sinphi*sinphi*sintheta*sintheta/b/b + r2*costheta*costheta/c/c; if
 		 * (term <= 1) sc.getType().set(on); } sc.close(); long end =
-		 * System.currentTimeMillis();
-		 * System.out.println("Ellipse creation done in " + (end-start) +
-		 * " ms."); System.out.println();
-		 * 
+		 * System.currentTimeMillis(); System.out.println(
+		 * "Ellipse creation done in " + (end-start) + " ms.");
+		 * System.out.println();
+		 *
 		 * ij.ImageJ.main(args); img.getDisplay().setMinMax();
 		 * ImageJFunctions.copyToImagePlus(img).show();
-		 * 
+		 *
 		 * start = System.currentTimeMillis(); BlobMorphology<UnsignedByteType>
 		 * bm = new BlobMorphology<UnsignedByteType>(img, calibration); SpotImp
 		 * spot = new SpotImp(center); spot.putFeature(Feature.RADIUS,
