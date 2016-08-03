@@ -7,10 +7,6 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import net.imagej.ImgPlus;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
-
 import org.scijava.plugin.Plugin;
 
 import fiji.plugin.trackmate.Dimension;
@@ -18,7 +14,10 @@ import fiji.plugin.trackmate.Model;
 import fiji.plugin.trackmate.Spot;
 import fiji.plugin.trackmate.features.spot.SpotAnalyzer;
 import fiji.plugin.trackmate.features.spot.SpotAnalyzerFactory;
-import fiji.plugin.trackmate.visualization.TrackMateModelView;
+import fiji.plugin.trackmate.visualization.VisualizationConstants;
+import net.imagej.ImgPlus;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 @Plugin( type = SpotAnalyzerFactory.class )
 public class ManualSpotColorAnalyzerFactory< T extends RealType< T > & NativeType< T >> implements SpotAnalyzerFactory< T >
@@ -42,7 +41,7 @@ public class ManualSpotColorAnalyzerFactory< T extends RealType< T > & NativeTyp
 
 	static final String NAME = "Manual spot color analyzer";
 
-	private static final Double DEFAULT_COLOR_VALUE = Double.valueOf( TrackMateModelView.DEFAULT_UNASSIGNED_FEATURE_COLOR.getRGB() );
+	private static final Double DEFAULT_COLOR_VALUE = Double.valueOf( VisualizationConstants.DEFAULT_UNASSIGNED_FEATURE_COLOR.getRGB() );
 
 	static
 	{

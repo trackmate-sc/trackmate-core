@@ -1,10 +1,5 @@
 package fiji.plugin.trackmate.features.manual;
 
-import fiji.plugin.trackmate.Dimension;
-import fiji.plugin.trackmate.Model;
-import fiji.plugin.trackmate.features.edges.EdgeAnalyzer;
-import fiji.plugin.trackmate.visualization.TrackMateModelView;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +10,11 @@ import javax.swing.ImageIcon;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.scijava.plugin.Plugin;
+
+import fiji.plugin.trackmate.Dimension;
+import fiji.plugin.trackmate.Model;
+import fiji.plugin.trackmate.features.edges.EdgeAnalyzer;
+import fiji.plugin.trackmate.visualization.VisualizationConstants;
 
 @Plugin( type = EdgeAnalyzer.class )
 public class ManualEdgeColorAnalyzer implements EdgeAnalyzer
@@ -38,7 +38,7 @@ public class ManualEdgeColorAnalyzer implements EdgeAnalyzer
 
 	static final String NAME = "Manual edge color analyzer";
 
-	private static final Double DEFAULT_COLOR_VALUE = Double.valueOf( TrackMateModelView.DEFAULT_UNASSIGNED_FEATURE_COLOR.getRGB() );
+	private static final Double DEFAULT_COLOR_VALUE = Double.valueOf( VisualizationConstants.DEFAULT_UNASSIGNED_FEATURE_COLOR.getRGB() );
 
 
 	static
