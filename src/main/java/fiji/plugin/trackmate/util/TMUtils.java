@@ -115,7 +115,7 @@ public class TMUtils
 	/**
 	 * Check that the given map has all some keys. Two String collection allows
 	 * specifying that some keys are mandatory, other are optional.
-	 * 
+	 *
 	 * @param map
 	 *            the map to inspect.
 	 * @param mandatoryKeys
@@ -165,7 +165,7 @@ public class TMUtils
 	/**
 	 * Check the presence and the validity of a key in a map, and test it is of
 	 * the desired class.
-	 * 
+	 *
 	 * @param map
 	 *            the map to inspect.
 	 * @param key
@@ -340,7 +340,7 @@ public class TMUtils
 
 	/**
 	 * Returns <code>[range, min, max]</code> of the given double array.
-	 * 
+	 *
 	 * @return A double[] of length 3, where index 0 is the range, index 1 is
 	 *         the min, and index 2 is the max.
 	 */
@@ -461,7 +461,7 @@ public class TMUtils
 	 * thresholds the histogram in 2 classes. The threshold is performed using
 	 * the Otsu Threshold Method, {@link http
 	 * ://www.labbookpages.co.uk/software/imgProc/otsuThreshold.html}.
-	 * 
+	 *
 	 * @param hist
 	 *            the histogram array
 	 * @param nPoints
@@ -581,7 +581,7 @@ public class TMUtils
 	 * <p>
 	 * If the specified {@link ImgPlus} has a time axis, it will be dropped and
 	 * the returned interval will have one dimension less.
-	 * 
+	 *
 	 * @param img
 	 *            the source image into which the interval is to be defined.
 	 * @param settings
@@ -658,6 +658,115 @@ public class TMUtils
 		}
 		final FinalInterval interval = new FinalInterval( intervalMin, intervalMax );
 		return interval;
+	}
+
+	/**
+	 * Store the half-widths of a X line to scan to fill an ellipse of given
+	 * axis lengths. The parameter <code>a</code> is the axis half-length in the
+	 * X direction, and <code>b</code> is the axis half-length in the Y
+	 * direction.
+	 * <p>
+	 * The half-widths will be stored in the array <code>lineBounds</code>,
+	 * which must be of size equal to at least <code>b+1</code>.
+	 * <p>
+	 * This is an implementation of the McIlroy's algorithm, adapted freely from
+	 * {@link "http://enchantia.com/software/graphapp/doc/tech/ellipses.html"}.
+	 *
+	 * @param a
+	 *            half-length of the ellipse in the X direction
+	 * @param b
+	 *            half-length of the ellipse in the Y direction
+	 * @param lineBounds
+	 *            will store the half-length of the ellipse lines in the X
+	 *            direction
+	 */
+	public static final void getXYEllipseBounds( final int a, final int b, final int[] lineBounds )
+	{
+		/* e(x,y) = b^2*x^2 + a^2*y^2 - a^2*b^2 */
+		int x = 0, y = b;
+		int width = 0;
+		final long a2 = ( long ) a * a, b2 = ( long ) b * b;
+		final long crit1 = -( a2 / 4 + a % 2 + b2 );
+		final long crit2 = -( b2 / 4 + b % 2 + a2 );
+		final long crit3 = -( b2 / 4 + b % 2 );
+		long t = -a2 * y; /* e(x+1/2,y-1/2) - (a^2+b^2)/4 */
+		long dxt = 2 * b2 * x, dyt = -2 * a2 * y;
+		final long d2xt = 2 * b2, d2yt = 2 * a2;
+
+		while ( y >= 0 && x <= a )
+		{
+			if ( t + b2 * x <= crit1 || /* e(x+1,y-1/2) <= 0 */
+					t + a2 * y <= crit3 )
+			{ /* e(x+1/2,y) <= 0 */
+				x++;
+				dxt += d2xt;
+				t += dxt;// incx();
+				width += 1;
+			}
+			else if ( t - a2 * y > crit2 )
+			{ /* e(x+1/2,y-1) > 0 */
+				lineBounds[ y ] = width; // row(y, width);
+				// if (y!=0)
+				// row(xc-x, yc+y, width);
+				y--;
+				dyt += d2yt;
+				t += dyt; // incy();
+			}
+			else
+			{
+				lineBounds[ y ] = width; // row(y, width);
+				// if (y!=0)
+				// row(xc-x, yc+y, width);
+				x++;
+				dxt += d2xt;
+				t += dxt; // incx();
+				y--;
+				dyt += d2yt;
+				t += dyt; // incy();
+				width += 1;
+			}
+		}
+		if ( b == 0 )
+			lineBounds[ 0 ] = a; // row(0, 2*a+1);
+	}
+
+	/**
+	 * Midpoint circle algorithm: store the bounds of a circle in the given
+	 * array. From
+	 * {@link "http://en.wikipedia.org/wiki/Midpoint_circle_algorithm"}
+	 * 
+	 * @param radius
+	 *            the radius of the circle
+	 * @param lineBounds
+	 *            the array to store bounds in
+	 */
+	public static final void getXYCircleBounds( final int radius, final int[] lineBounds )
+	{
+		int f = 1 - radius;
+		int ddF_x = 1;
+		int ddF_y = -2 * radius;
+		int x = 0;
+		int y = radius;
+
+		lineBounds[ 0 ] = radius;
+
+		while ( x < y )
+		{
+			// ddF_x == 2 * x + 1;
+			// ddF_y == -2 * y;
+			// f == x*x + y*y - radius*radius + 2*x - y + 1;
+			if ( f >= 0 )
+			{
+				y--;
+				ddF_y += 2;
+				f += ddF_y;
+			}
+			x++;
+			ddF_x += 2;
+			f += ddF_x;
+			lineBounds[ y ] = x;
+			lineBounds[ x ] = y;
+		}
 	}
 
 	private TMUtils()

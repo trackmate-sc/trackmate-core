@@ -63,7 +63,7 @@ public class SpotNeighborhood< T extends RealType< T >> implements Neighborhood<
 			{
 				span[ 1 ] = 0;
 			}
-			this.neighborhood = new RectangleNeighborhoodGPL< T >( img, oob );
+			this.neighborhood = new RectangleNeighborhood< T >( img, oob );
 			neighborhood.setPosition( center );
 			neighborhood.setSpan( span );
 		}
