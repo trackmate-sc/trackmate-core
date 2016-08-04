@@ -6,20 +6,18 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import net.imglib2.Cursor;
+import fiji.plugin.trackmate.Spot;
+import fiji.plugin.trackmate.detection.util.MedianFilter2D;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.Point;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.localextrema.LocalExtrema;
 import net.imglib2.algorithm.localextrema.LocalExtrema.LocalNeighborhoodCheck;
 import net.imglib2.algorithm.localextrema.RefinedPeak;
 import net.imglib2.algorithm.localextrema.SubpixelLocalization;
-import net.imglib2.converter.RealFloatConverter;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayCursor;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgs;
@@ -30,8 +28,6 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
-import fiji.plugin.trackmate.Spot;
-import fiji.plugin.trackmate.detection.util.MedianFilter2D;
 
 public class DetectionUtils
 {
@@ -109,37 +105,6 @@ public class DetectionUtils
 		}
 
 		return kernel;
-	}
-
-	/**
-	 * Copy an interval of the specified source image on a float image.
-	 *
-	 * @param img
-	 *            the source image.
-	 * @param interval
-	 *            the interval in the source image to copy.
-	 * @param factory
-	 *            a factory used to build the float image.
-	 * @return a new float Img. Careful: even if the specified interval does not
-	 *         start at (0, 0), the new image will have its first pixel at
-	 *         coordinates (0, 0).
-	 */
-	public static final < T extends RealType< T >> Img< FloatType > copyToFloatImg( final RandomAccessible< T > img, final Interval interval, final ImgFactory< FloatType > factory )
-	{
-		final Img< FloatType > output = factory.create( interval, new FloatType() );
-		final long[] min = new long[ interval.numDimensions() ];
-		interval.min( min );
-		final RandomAccess< T > in = Views.offset( img, min ).randomAccess();
-		final Cursor< FloatType > out = output.cursor();
-		final RealFloatConverter< T > c = new RealFloatConverter< T >();
-
-		while ( out.hasNext() )
-		{
-			out.fwd();
-			in.setPosition( out );
-			c.convert( in.get(), out.get() );
-		}
-		return output;
 	}
 
 	/**

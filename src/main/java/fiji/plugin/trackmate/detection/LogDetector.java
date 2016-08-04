@@ -2,15 +2,14 @@ package fiji.plugin.trackmate.detection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import fiji.plugin.trackmate.Spot;
+import fiji.plugin.trackmate.detection.util.FFTConvolver;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.MultiThreaded;
 import net.imglib2.img.Img;
-import net.imglib2.img.ImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -96,12 +95,7 @@ public class LogDetector< T extends RealType< T > & NativeType< T >> implements 
 	{
 		final long start = System.currentTimeMillis();
 
-		/*
-		 * Copy to float for convolution.
-		 */
-
-		final ImgFactory< FloatType > factory = Util.getArrayOrCellImgFactory( interval, new FloatType() );
-		Img< FloatType > floatImg = DetectionUtils.copyToFloatImg( img, interval, factory );
+		RandomAccessibleInterval< T > source = Views.interval( img, interval );
 
 		/*
 		 * Do median filtering (or not).
@@ -109,8 +103,8 @@ public class LogDetector< T extends RealType< T > & NativeType< T >> implements 
 
 		if ( doMedianFilter )
 		{
-			floatImg = DetectionUtils.applyMedianFilter( floatImg );
-			if ( null == floatImg )
+			source = DetectionUtils.applyMedianFilter( source );
+			if ( null == source )
 			{
 				errorMessage = BASE_ERROR_MESSAGE + "Failed to apply median filter.";
 				return false;
@@ -129,11 +123,11 @@ public class LogDetector< T extends RealType< T > & NativeType< T >> implements 
 		}
 
 		final Img< FloatType > kernel = DetectionUtils.createLoGKernel( radius, ndims, calibration );
-		final FFTConvolution< FloatType > fftconv = new FFTConvolution< FloatType >( floatImg, kernel );
-		final ExecutorService service = Executors.newFixedThreadPool(numThreads);
-		fftconv.setExecutorService(service);
-		fftconv.convolve();
-		service.shutdown();
+		final FFTConvolver convolver = new FFTConvolver( kernel, interval );
+		convolver.setNumThreads( numThreads );
+
+		final Img< FloatType > output = Util.getArrayOrCellImgFactory( interval, new FloatType() ).create( interval, new FloatType() );
+		convolver.convolve( source, output );
 
 		final long[] minopposite = new long[ interval.numDimensions() ];
 		interval.min( minopposite );
@@ -141,7 +135,7 @@ public class LogDetector< T extends RealType< T > & NativeType< T >> implements 
 		{
 			minopposite[ d ] = -minopposite[ d ];
 		}
-		final IntervalView< FloatType > to = Views.offset( floatImg, minopposite );
+		final IntervalView< FloatType > to = Views.offset( output, minopposite );
 		spots = DetectionUtils.findLocalMaxima( to, threshold, calibration, radius, doSubPixelLocalization, numThreads );
 
 		final long end = System.currentTimeMillis();
