@@ -4,7 +4,7 @@ package fiji.plugin.trackmate.util;
 import net.imglib2.Cursor;
 
 /**
- * A {@link Cursor} that iterates over a {@link RectangleNeighborhoodGPL}.
+ * A {@code Cursor} that iterates over a {@code RectangleNeighborhoodGPL}.
  *
  * @author Jean-Yves Tinevez
  */

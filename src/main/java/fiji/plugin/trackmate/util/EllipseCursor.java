@@ -38,23 +38,6 @@ public final class EllipseCursor< T > extends AbstractNeighborhoodCursor< T >
 	 * CONSTRUCTORS
 	 */
 
-	/**
-	 * Construct a {@link DiscCursor} on an image with a given spatial
-	 * calibration.
-	 *
-	 * @param img
-	 *            the image
-	 * @param center
-	 *            the disc center, in physical units
-	 * @param radius
-	 *            the disc radius, in physical units
-	 * @param calibration
-	 *            the spatial calibration (pixel size); if <code>null</code>, a
-	 *            calibration of 1 in all directions will be used
-	 * @param outOfBoundsFactory
-	 *            the {@link OutOfBoundsStrategyFactory} that will be used to
-	 *            handle off-bound locations
-	 */
 	public EllipseCursor( final AbstractNeighborhood< T > ellipse )
 	{
 		super( ellipse );
