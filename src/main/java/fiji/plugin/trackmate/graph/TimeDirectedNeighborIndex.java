@@ -11,7 +11,7 @@ import java.util.Set;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
-import org.jgrapht.alg.NeighborIndex;
+import org.jgrapht.alg.util.NeighborCache;
 import org.jgrapht.event.GraphEdgeChangeEvent;
 import org.jgrapht.event.GraphVertexChangeEvent;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -19,15 +19,15 @@ import org.jgrapht.util.ModifiableInteger;
 
 import fiji.plugin.trackmate.Spot;
 
-public class TimeDirectedNeighborIndex extends NeighborIndex< Spot, DefaultWeightedEdge >
+public class TimeDirectedNeighborIndex extends NeighborCache< Spot, DefaultWeightedEdge >
 {
 
 	// ~ Instance fields
 	// --------------------------------------------------------
 
-	Map< Spot, Neighbors< Spot, DefaultWeightedEdge > > predecessorMap = new HashMap< Spot, Neighbors< Spot, DefaultWeightedEdge > >();
+	Map< Spot, Neighbors< Spot, DefaultWeightedEdge > > predecessorMap = new HashMap< >();
 
-	Map< Spot, Neighbors< Spot, DefaultWeightedEdge > > successorMap = new HashMap< Spot, Neighbors< Spot, DefaultWeightedEdge > >();
+	Map< Spot, Neighbors< Spot, DefaultWeightedEdge > > successorMap = new HashMap< >();
 
 	private final Graph< Spot, DefaultWeightedEdge > graph;
 
@@ -188,7 +188,7 @@ public class TimeDirectedNeighborIndex extends NeighborIndex< Spot, DefaultWeigh
 		if ( neighbors == null )
 		{
 			final List< Spot > nl = Graphs.neighborListOf( graph, v );
-			final List< Spot > bnl = new ArrayList< Spot >();
+			final List< Spot > bnl = new ArrayList< >();
 			final int ts = v.getFeature( Spot.FRAME ).intValue();
 			for ( final Spot spot : nl )
 			{
@@ -198,7 +198,7 @@ public class TimeDirectedNeighborIndex extends NeighborIndex< Spot, DefaultWeigh
 					bnl.add( spot );
 				}
 			}
-			neighbors = new Neighbors< Spot, DefaultWeightedEdge >( v, bnl );
+			neighbors = new Neighbors< >( v, bnl );
 			predecessorMap.put( v, neighbors );
 		}
 		return neighbors;
@@ -210,7 +210,7 @@ public class TimeDirectedNeighborIndex extends NeighborIndex< Spot, DefaultWeigh
 		if ( neighbors == null )
 		{
 			final List< Spot > nl = Graphs.neighborListOf( graph, v );
-			final List< Spot > bnl = new ArrayList< Spot >();
+			final List< Spot > bnl = new ArrayList< >();
 			final int ts = v.getFeature( Spot.FRAME ).intValue();
 			for ( final Spot spot : nl )
 			{
@@ -220,7 +220,7 @@ public class TimeDirectedNeighborIndex extends NeighborIndex< Spot, DefaultWeigh
 					bnl.add( spot );
 				}
 			}
-			neighbors = new Neighbors< Spot, DefaultWeightedEdge >( v, bnl );
+			neighbors = new Neighbors< >( v, bnl );
 			successorMap.put( v, neighbors );
 		}
 		return neighbors;
@@ -236,14 +236,15 @@ public class TimeDirectedNeighborIndex extends NeighborIndex< Spot, DefaultWeigh
 	static class Neighbors< V, E >
 	{
 		private final Map< V, ModifiableInteger > neighborCounts =
-				new LinkedHashMap< V, ModifiableInteger >();
+				new LinkedHashMap< >();
 
-		// TODO could eventually make neighborSet modifiable, resulting
-		// in edge removals from the graph
 		private final Set< V > neighborSet =
 				Collections.unmodifiableSet(
 						neighborCounts.keySet() );
 
+		/**
+		 * @param v  
+		 */
 		public Neighbors( final V v, final Collection< V > neighbors )
 		{
 			// add all current neighbors
@@ -287,7 +288,7 @@ public class TimeDirectedNeighborIndex extends NeighborIndex< Spot, DefaultWeigh
 
 		public List< V > getNeighborList()
 		{
-			final List< V > neighbors = new ArrayList< V >();
+			final List< V > neighbors = new ArrayList< >();
 			for ( final Map.Entry< V, ModifiableInteger > entry : neighborCounts.entrySet() )
 			{
 				final V v = entry.getKey();

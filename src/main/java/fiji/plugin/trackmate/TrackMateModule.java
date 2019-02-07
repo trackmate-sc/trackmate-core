@@ -25,19 +25,19 @@ import org.scijava.plugin.SciJavaPlugin;
  * <p>
  * Currently there are 7 types of modules:
  * <ul>
- * <li>{@link fiji.plugin.trackmate.detection.SpotDetectorFactory}: generates
+ * <li>{@code fiji.plugin.trackmate.detection.SpotDetectorFactory}: generates
  * detectors for the detection step of TrackMate.
- * <li>{@link fiji.plugin.trackmate.features.spot.SpotAnalyzerFactory}:
+ * <li>{@code fiji.plugin.trackmate.features.spot.SpotAnalyzerFactory}:
  * generates analyzers that grant spots with scalar numerical features.
- * <li>{@link fiji.plugin.trackmate.visualization.ViewFactory}: generates views
+ * <li>{@code fiji.plugin.trackmate.visualization.ViewFactory}: generates views
  * that can display the detection and tracking results.
- * <li>{@link fiji.plugin.trackmate.tracking.SpotTrackerFactory}: generates
+ * <li>{@code fiji.plugin.trackmate.tracking.SpotTrackerFactory}: generates
  * particle linkers for the tracking step of TrackMate.
- * <li>{@link fiji.plugin.trackmate.features.track.TrackAnalyzer}: compute
+ * <li>{@code fiji.plugin.trackmate.features.track.TrackAnalyzer}: compute
  * scalar numerical features for tracks.
- * <li>{@link fiji.plugin.trackmate.features.edges.EdgeAnalyzer}: compute scalar
+ * <li>{@code fiji.plugin.trackmate.features.edges.EdgeAnalyzer}: compute scalar
  * numerical features for edges (individual links between spots).
- * <li>{@link fiji.plugin.trackmate.action.TrackMateActionFactory}: generates
+ * <li>{@code fiji.plugin.trackmate.action.TrackMateActionFactory}: generates
  * actions that provide general use actions for TrackMate from the GUI.
  * </ul>
  * 

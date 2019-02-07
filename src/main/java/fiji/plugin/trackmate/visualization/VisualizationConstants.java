@@ -48,7 +48,7 @@ public final class VisualizationConstants
 
 	/**
 	 * Defines the key for the track coloring method. Values are concrete
-	 * implementations of {@link TrackColorGenerator}.
+	 * implementations of {@code TrackColorGenerator}.
 	 */
 	public static final String KEY_TRACK_COLORING = "TrackColoring";
 
@@ -73,14 +73,14 @@ public final class VisualizationConstants
 
 	/**
 	 * Defines the key for the spot coloring method. Accepted values are
-	 * implementation of {@link FeatureColorGenerator}
+	 * implementation of {@code FeatureColorGenerator}
 	 */
 	public static final String KEY_SPOT_COLORING = "SpotColoring";
 
 	/**
 	 * Defines the key for the color map to use for painting overlay. Acceptable
-	 * values are {@link InterpolatePaintScale}s, the default is
-	 * {@link InterpolatePaintScale#Jet}.
+	 * values are {@code InterpolatePaintScale}s, the default is
+	 * {@code InterpolatePaintScale#Jet}.
 	 */
 	public static final String KEY_COLORMAP = "ColorMap";
 

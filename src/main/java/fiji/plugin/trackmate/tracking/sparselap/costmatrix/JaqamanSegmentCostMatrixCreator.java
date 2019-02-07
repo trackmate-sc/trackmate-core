@@ -30,8 +30,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import net.imglib2.algorithm.MultiThreaded;
-
-import org.jgrapht.UndirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 /**
@@ -69,7 +68,7 @@ public class JaqamanSegmentCostMatrixCreator implements CostMatrixCreator< Spot,
 
 	private List< Spot > uniqueTargets;
 
-	private final UndirectedGraph< Spot, DefaultWeightedEdge > graph;
+	private final Graph< Spot, DefaultWeightedEdge > graph;
 
 	private double alternativeCost = -1;
 
@@ -80,7 +79,7 @@ public class JaqamanSegmentCostMatrixCreator implements CostMatrixCreator< Spot,
 	 * segment linking cost matrix.
 	 * 
 	 */
-	public JaqamanSegmentCostMatrixCreator( final UndirectedGraph< Spot, DefaultWeightedEdge > graph, final Map< String, Object > settings )
+	public JaqamanSegmentCostMatrixCreator( final Graph< Spot, DefaultWeightedEdge > graph, final Map< String, Object > settings )
 	{
 		this.graph = graph;
 		this.settings = settings;
@@ -170,8 +169,8 @@ public class JaqamanSegmentCostMatrixCreator implements CostMatrixCreator< Spot,
 		final List< Spot > allMiddles;
 		if ( mergingOrSplitting )
 		{
-			final List< List< Spot >> segmentMiddles = segmentSplitter.getSegmentMiddles();
-			allMiddles = new ArrayList< Spot >();
+			final List< List< Spot > > segmentMiddles = segmentSplitter.getSegmentMiddles();
+			allMiddles = new ArrayList< >();
 			for ( final List< Spot > segment : segmentMiddles )
 			{
 				allMiddles.addAll( segment );
@@ -187,8 +186,8 @@ public class JaqamanSegmentCostMatrixCreator implements CostMatrixCreator< Spot,
 		/*
 		 * Sources and targets.
 		 */
-		final ArrayList< Spot > sources = new ArrayList< Spot >();
-		final ArrayList< Spot > targets = new ArrayList< Spot >();
+		final ArrayList< Spot > sources = new ArrayList< >();
+		final ArrayList< Spot > targets = new ArrayList< >();
 		// Corresponding costs.
 		final ResizableDoubleArray linkCosts = new ResizableDoubleArray();
 
@@ -357,7 +356,7 @@ public class JaqamanSegmentCostMatrixCreator implements CostMatrixCreator< Spot,
 		else
 		{
 
-			final DefaultCostMatrixCreator< Spot, Spot > creator = new DefaultCostMatrixCreator< Spot, Spot >( sources, targets, linkCosts.data, alternativeCostFactor, percentile );
+			final DefaultCostMatrixCreator< Spot, Spot > creator = new DefaultCostMatrixCreator< >( sources, targets, linkCosts.data, alternativeCostFactor, percentile );
 			if ( !creator.checkInput() || !creator.process() )
 			{
 				errorMessage = "Linking track segments: " + creator.getErrorMessage();
@@ -456,7 +455,7 @@ public class JaqamanSegmentCostMatrixCreator implements CostMatrixCreator< Spot,
 		ok = ok & checkParameter( settings, KEY_CUTOFF_PERCENTILE, Double.class, str );
 
 		// Check keys
-		final List< String > mandatoryKeys = new ArrayList< String >();
+		final List< String > mandatoryKeys = new ArrayList< >();
 		mandatoryKeys.add( KEY_ALLOW_GAP_CLOSING );
 		mandatoryKeys.add( KEY_GAP_CLOSING_MAX_DISTANCE );
 		mandatoryKeys.add( KEY_GAP_CLOSING_MAX_FRAME_GAP );
@@ -466,7 +465,7 @@ public class JaqamanSegmentCostMatrixCreator implements CostMatrixCreator< Spot,
 		mandatoryKeys.add( KEY_MERGING_MAX_DISTANCE );
 		mandatoryKeys.add( KEY_ALTERNATIVE_LINKING_COST_FACTOR );
 		mandatoryKeys.add( KEY_CUTOFF_PERCENTILE );
-		final List< String > optionalKeys = new ArrayList< String >();
+		final List< String > optionalKeys = new ArrayList< >();
 		optionalKeys.add( KEY_GAP_CLOSING_FEATURE_PENALTIES );
 		optionalKeys.add( KEY_SPLITTING_FEATURE_PENALTIES );
 		optionalKeys.add( KEY_MERGING_FEATURE_PENALTIES );

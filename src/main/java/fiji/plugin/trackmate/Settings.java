@@ -27,7 +27,7 @@ public class Settings
 
 	/**
 	 * The ImagePlus to operate on. Will also be used by some
-	 * {@link fiji.plugin.trackmate.visualization.TrackMateModelView} as a GUI
+	 * {@code fiji.plugin.trackmate.visualization.TrackMateModelView} as a GUI
 	 * target.
 	 */
 	public ImagePlus imp;
