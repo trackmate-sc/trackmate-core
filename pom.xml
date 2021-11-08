@@ -62,7 +62,7 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/fiji/trackmate-core</connection>
+		<connection>scm:git:https://github.com/fiji/trackmate-core</connection>
 		<developerConnection>scm:git:git@github.com:fiji/trackmate-core</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/fiji/trackmate-core</url>
