@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/trackmate-sc/trackmate-core/actions/workflows/build-main.yml/badge.svg)](https://github.com/trackmate-sc/trackmate-core/actions/workflows/build-main.yml)
+[![Build Status](https://github.com/trackmate-sc/trackmate-core/actions/workflows/build.yml/badge.svg)](https://github.com/trackmate-sc/trackmate-core/actions/workflows/build.yml)
 
 # trackmate-core
 
